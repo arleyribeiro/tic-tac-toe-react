@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./game.css";
 
 const getWinner = (squares) => {
@@ -20,6 +20,8 @@ const getWinner = (squares) => {
   }
   return null;
 };
+
+const GameContext = React.createContext();
 
 const Game = () => {
   const initialState = {
@@ -51,43 +53,44 @@ const Game = () => {
   };
 
   return (
-    <>
+    <GameContext.Provider value={{ ...state }}>
       <div className="game">
         {!state.winner && <div>Next player: {state.isNext ? "X" : "O"}</div>}
-        {state.winner && (
-          <div>
-            Player {state.winner} won!{" "}
-            <div>
-              <button onClick={() => restart()}>restart</button>
-            </div>
-          </div>
-        )}
-        <Board {...state}></Board>
+        {state.winner && <Winner restart={() => restart()} />}
+        <Board></Board>
       </div>
-    </>
+    </GameContext.Provider>
   );
 };
 
-const Board = (state) => {
+const Board = () => {
+  const state = useContext(GameContext);
   return (
     <div className="board">
-      <Square value={0} state={state}></Square>
-      <Square value={1} state={state}></Square>
-      <Square value={2} state={state}></Square>
-      <Square value={3} state={state}></Square>
-      <Square value={4} state={state}></Square>
-      <Square value={5} state={state}></Square>
-      <Square value={6} state={state}></Square>
-      <Square value={7} state={state}></Square>
-      <Square value={8} state={state}></Square>
+      {state.squares.map((square, index) => {
+        return <Square key={index} value={index}></Square>;
+      })}
     </div>
   );
 };
 
-const Square = ({ value, state }) => {
+const Square = ({ value }) => {
+  const state = useContext(GameContext);
   return (
     <div className="square" onClick={() => state.onClick(value)}>
       {state.squares[value]}
+    </div>
+  );
+};
+
+const Winner = ({ restart }) => {
+  const state = useContext(GameContext);
+  return (
+    <div>
+      Player {state.winner} won!
+      <div>
+        <button onClick={() => restart()}>restart</button>
+      </div>
     </div>
   );
 };
