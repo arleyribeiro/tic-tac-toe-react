@@ -1,0 +1,23 @@
+.square {
+  border: 1px solid black;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: 48px 48px 48px;
+  grid-template-rows: 48px 48px 48px;
+}
+
+.game {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  padding: 20px;
+}
